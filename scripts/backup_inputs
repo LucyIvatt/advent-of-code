@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Load environment variables from .env file
-source .env
-
 # Function to display script usage information
 display_help() {
     echo "Usage: $0"
@@ -16,7 +13,7 @@ if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
 fi
 
 # Loop through text files and copy them
-find "$AOC_SOLUTION_REPO" -type f -name "*.txt" | while IFS= read -r file; do
+find "$AOC_SOLUTION_REPO" -type f -name "*.txt" -not -path "*/node_modules/*" | while IFS= read -r file; do
     destination_path="$AOC_INPUT_REPO${file#$AOC_SOLUTION_REPO}"
     mkdir -p "$(dirname "$destination_path")"
     cp "$file" "$destination_path"
