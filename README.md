@@ -44,8 +44,13 @@ Python: 🐍 Typescript: ⌨️
 
 _\*with the amount of help I needed from reddit & friends, I don't think p2 for this one reaaaally counts_ 😂
 
-## Python Solution Code Runner Executor
+## Code Runner Executor Config
 
-```
-"python": "cd $dir && bash -c 'MODULE=\"$fileNameWithoutExt\"; while [ -f \"../__init__.py\" ]; do MODULE=\"${PWD##*/}.$MODULE\"; cd ..; done; python -m \"$MODULE\"'",
+```json
+    "code-runner.executorMap": {
+        "python": "cd $dir && bash -c 'MODULE=\"$fileNameWithoutExt\"; while [ -f \"../__init__.py\" ]; do MODULE=\"${PWD##*/}.$MODULE\"; cd ..; done; python3 -m \"$MODULE\"'",
+    },
+    "code-runner.executorMapByGlob": {
+        "*.spec.ts": "npm t",
+    },
 ```
