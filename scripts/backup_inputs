@@ -16,8 +16,8 @@ if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
 fi
 
 # Loop through text files and copy them
-find "$SOLUTION_REPO" -type f -name "*.txt" | while IFS= read -r file; do
-    destination_path="$INPUT_REPO${file#$SOLUTION_REPO}"
+find "$AOC_SOLUTION_REPO" -type f -name "*.txt" | while IFS= read -r file; do
+    destination_path="$AOC_INPUT_REPO${file#$AOC_SOLUTION_REPO}"
     mkdir -p "$(dirname "$destination_path")"
     cp "$file" "$destination_path"
 done

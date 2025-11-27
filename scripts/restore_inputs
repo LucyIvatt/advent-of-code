@@ -18,8 +18,8 @@ if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
 fi
 
 # Copy and replace text files
-find "$INPUT_REPO" -type f -name "*.txt" -exec sh -c '
+find "$AOC_INPUT_REPO" -type f -name "*.txt" -exec sh -c '
     destination_path="$2/$(echo "$1" | sed s:^"$3"::)"
     mkdir -p "$(dirname "$destination_path")"
     cp "$1" "$destination_path"
-' _ {} "$SOLUTION_REPO" "$INPUT_REPO" \;
+' _ {} "$AOC_SOLUTION_REPO" "$AOC_INPUT_REPO" \;

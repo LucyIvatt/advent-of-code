@@ -1,14 +1,20 @@
 #!/bin/bash
 
+# Require env var
+if [ -z "$AOC_SOLUTION_REPO" ]; then
+    echo "ERROR: AOC_SOLUTION_REPO must be set in the environment."
+    exit 1
+fi
+
 Help() {
     echo "Usage: $0 <day_num> <task_name> <year> <language>"
-    echo "  day_num     Day number (e.g., 01, 02, ..., 25)"
-    echo "  task_name   Task name (e.g., cube_conundrum, camp_cleanup etc.)"
-    echo "  year        Year (e.g., 2022)"
-    echo "  language    Programming language (py or ts)"
+    echo "  day_num     Day number (01–25)"
+    echo "  task_name   Task name (cube_conundrum, camp_cleanup…)"
+    echo "  year        Year (e.g., 2025)"
+    echo "  language    py or ts"
 }
 
-# Check if the number of arguments is correct
+# Check args
 if [ "$#" -ne 4 ]; then
     Help
     exit 1
@@ -19,40 +25,41 @@ task_name="$2"
 year="$3"
 language="$4"
 
-if [ "$language" == "py" ]; then
-    year_folder="python/year_$year"
-    day_folder="$year_folder/day_$day_num"_"$task_name"
-elif [ "$language" == "ts" ]; then
-    year_folder="typescript/year_$year"
-    day_folder="$year_folder/day_$day_num"_"$task_name"
+# Build base paths inside the solution repo
+if [ "$language" = "py" ]; then
+    year_folder="$AOC_SOLUTION_REPO/python/year_$year"
+    template_folder="$AOC_SOLUTION_REPO/python/template"
+elif [ "$language" = "ts" ]; then
+    year_folder="$AOC_SOLUTION_REPO/typescript/year_$year"
+    template_folder="$AOC_SOLUTION_REPO/typescript/template"
 else
-    echo "Unsupported language: $language"
-    Help
+    echo "ERROR: Unsupported language: $language"
     exit 1
 fi
 
-# Create the year folder if it doesn't exist
-if [ ! -d "$year_folder" ]; then
-    mkdir -p "$year_folder"
-fi
+day_folder="$year_folder/day_${day_num}_${task_name}"
 
+# Create directory
 mkdir -p "$day_folder"
-touch "$day_folder/input.txt"
-touch "$day_folder/example.txt"
 
-if [ "$language" == "py" ]; then
-    cp -rv python/template/* "$day_folder"
-    jinja2 "$day_folder/solution.py.j2" -o "$day_folder/solution.py" -D "day_num=$day_num" -D "task_name=$task_name" -D"year=$year"
-    jinja2 "$day_folder/test.py.j2" -o "$day_folder/test.py" -D "day_num=$day_num" -D "task_name=$task_name" -D"year=$year"
-    rm -fv "$day_folder/solution.py.j2" "$day_folder/test.py.j2"
-    
-elif [ "$language" == "ts" ]; then
-    cp -rv typescript/template/* "$day_folder"
-    jinja2 "$day_folder/solution.ts.j2" -o "$day_folder/solution.ts" -D "day_num=$day_num" -D "task_name=$task_name" -D"year=$year"
-    jinja2 "$day_folder/solution.spec.ts.j2" -o "$day_folder/solution.spec.ts" -D "day_num=$day_num" -D "task_name=$task_name" -D"year=$year"
-    rm -fv "$day_folder/solution.ts.j2" "$day_folder/solution.spec.ts.j2"
+# Copy templates into place
+cp -rv "$template_folder/"* "$day_folder"
+
+# Render templates
+if [ "$language" = "py" ]; then
+    jinja2 "$day_folder/solution.py.j2" -o "$day_folder/solution.py" \
+        -D day_num="$day_num" -D task_name="$task_name" -D year="$year"
+
+    jinja2 "$day_folder/test.py.j2" -o "$day_folder/test.py" \
+        -D day_num="$day_num" -D task_name="$task_name" -D year="$year"
+
+    rm -v "$day_folder/solution.py.j2" "$day_folder/test.py.j2"
 else
-    echo "Unsupported language: $language - Enter 'py' or 'ts'"
-    Help
-    exit 1
+    jinja2 "$day_folder/solution.ts.j2" -o "$day_folder/solution.ts" \
+        -D day_num="$day_num" -D task_name="$task_name" -D year="$year"
+
+    jinja2 "$day_folder/solution.spec.ts.j2" -o "$day_folder/solution.spec.ts" \
+        -D day_num="$day_num" -D task_name="$task_name" -D year="$year"
+
+    rm -v "$day_folder/solution.ts.j2" "$day_folder/solution.spec.ts.j2"
 fi
