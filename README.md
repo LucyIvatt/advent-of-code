@@ -55,6 +55,7 @@ _\*with the amount of help I needed from reddit & friends, I don't think p2 for 
     },
 ```
 
-## TODO
-[ ] Update script and/or structure of the advent-of-code-inputs private repo to respect the new `typescript/` & `python/` structures
-[ ] Add missing backups for inputs for 2024 🙄
+## TO-DO
+- [ ] Update scripts and/or structure of the `advent-of-code-inputs` private repo to respect the new `typescript/` & `python/` folder structures when backing up and restoring text file inputs
+- [ ] Add missing backups for inputs for 2024 because they were on my old laptop and I didn't back them up 🙄
+- [ ] Add further notes about local setup of the repo & tests in VSCode
