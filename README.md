@@ -54,3 +54,7 @@ _\*with the amount of help I needed from reddit & friends, I don't think p2 for 
         "*.spec.ts": "npm t",
     },
 ```
+
+## TODO
+[ ] Update script and/or structure of the advent-of-code-inputs private repo to respect the new `typescript/` & `python/` structures
+[ ] Add missing backups for inputs for 2024 🙄
