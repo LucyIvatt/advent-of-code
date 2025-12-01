@@ -18,8 +18,8 @@ def calculateRotation(pos, direction, value):
             crossed_zero = True
         elif direction == "R" and new_pos < pos:  # Position being lower after positive move must mean a wrap
             crossed_zero = True
-    rotations = full_rotations + (1 if crossed_zero else 0)
 
+    rotations = full_rotations + (1 if crossed_zero else 0)
     return new_pos, rotations
 
 
