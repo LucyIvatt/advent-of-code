@@ -1,14 +1,18 @@
 from itertools import groupby
 import time
 from enum import Enum
+import os
 
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 def input_data(filename):
-    """Returns the data imported from file - 
-    """
+    """Returns the data imported from file, resolving paths relative to project root."""
+    if not os.path.isabs(filename):
+        filename = os.path.join(PROJECT_ROOT, filename)
+
     with open(filename, "r") as file:
-        puzzle_input = [line.strip() for line in file.readlines()]
-        return puzzle_input
+        return [line.strip() for line in file.readlines()]
+
 
 
 def get_adjacent_coords(coords, x_limit, y_limit, diagonal=False):

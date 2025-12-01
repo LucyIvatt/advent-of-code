@@ -48,7 +48,7 @@ _\*with the amount of help I needed from reddit & friends, I don't think p2 for 
 
 ```json
     "code-runner.executorMap": {
-        "python": "cd $dir && bash -c 'MODULE=\"$fileNameWithoutExt\"; while [ -f \"../__init__.py\" ]; do MODULE=\"${PWD##*/}.$MODULE\"; cd ..; done; python3 -m \"$MODULE\"'",
+        "python": "cd $dir && PYTHONPATH=/home/luce/dev/advent-of-code python3 \"$fileName\""
     },
     "code-runner.executorMapByGlob": {
         "*.spec.ts": "npm t",
