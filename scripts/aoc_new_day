@@ -39,11 +39,24 @@ fi
 
 day_folder="$year_folder/day_${day_num}_${task_name}"
 
-# Create directory
+# Create year folder — and __init__.py if it didn't exist before
+if [ ! -d "$year_folder" ]; then
+    mkdir -p "$year_folder"
+    if [ "$language" = "py" ]; then
+        touch "$year_folder/__init__.py"
+        echo "Created $year_folder/__init__.py"
+    fi
+fi
+
+# Create day directory
 mkdir -p "$day_folder"
 
 # Copy templates into place
 cp -rv "$template_folder/"* "$day_folder"
+
+# Create empty input files
+touch "$day_folder/example.txt"
+touch "$day_folder/input.txt"
 
 # Render templates
 if [ "$language" = "py" ]; then
