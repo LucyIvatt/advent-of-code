@@ -5,6 +5,7 @@ import os
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
+
 def input_data(filename):
     """Returns the data imported from file, resolving paths relative to project root."""
     if not os.path.isabs(filename):
@@ -12,7 +13,6 @@ def input_data(filename):
 
     with open(filename, "r") as file:
         return [line.strip() for line in file.readlines()]
-
 
 
 def get_adjacent_coords(coords, x_limit, y_limit, diagonal=False):
@@ -25,16 +25,16 @@ def get_adjacent_coords(coords, x_limit, y_limit, diagonal=False):
         directions = [(dx, dy) for dx in range(-1, 2)
                       for dy in range(-1, 2) if (dx, dy) != (0, 0) and (dx == 0 or dy == 0)]
 
-    adjecent_coords = []
+    adjacent_coords = []
 
     for coord in coords:
         x, y = coord
-        adjecent_coords += [
+        adjacent_coords += [
             (x + dx, y + dy) for dx, dy in directions
             if 0 <= x + dx < x_limit and 0 <= y + dy < y_limit
         ]
 
-    return set([coord for coord in adjecent_coords if coord not in coords])
+    return set([coord for coord in adjacent_coords if coord not in coords])
 
 
 def time_function(func, *args):
@@ -72,3 +72,8 @@ class Direction(Enum):
 def split_by_empty_line(puzzle_input):
     """Splits the puzzle input into patterns by empty line."""
     return [list(group) for key, group in groupby(puzzle_input, key=lambda x: x == "") if not key]
+
+
+def get_factors(x):
+    """Return all positive factors of n."""
+    return [i for i in range(1, x + 1) if x % i == 0]
