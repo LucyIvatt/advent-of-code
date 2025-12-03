@@ -1,38 +1,26 @@
 from python.helpers.aoc_utils import input_data, time_function
-from itertools import combinations
-from collections import deque
 
 
 def find_highest_joltage(bank, n):
-    battery_stack, batteries_to_remove = [], len(bank) - n
-
+    stack, num_to_remove = [], len(bank) - n
     for digit in bank:
-        while len(battery_stack) > 0 and battery_stack[-1] < digit and batteries_to_remove > 0:
-            battery_stack.pop()
-            batteries_to_remove -= 1
-        battery_stack.append(digit)
-    print(battery_stack)
+        while stack and stack[-1] < digit and num_to_remove > 0:
+            stack.pop()
+            num_to_remove -= 1
+        stack.append(digit)
+    return int("".join(str(stack[i]) for i in range(n)))
 
-    value = ""
-    for digit in range(n):
-        value += str(battery_stack[digit])
-    return int(value)
+
+def solve(puzzle_input, n):
+    return sum(find_highest_joltage([int(battery)for battery in bank], n) for bank in puzzle_input)
 
 
 def part_one(puzzle_input):
-    total_joltage, n = 0, 2
-    for bank in puzzle_input:
-        batteries = [int(battery) for battery in bank]
-        total_joltage += find_highest_joltage(batteries, n)
-    return total_joltage
+    return solve(puzzle_input, 2)
 
 
 def part_two(puzzle_input):
-    total_joltage, n = 0, 12
-    for bank in puzzle_input:
-        batteries = [int(battery) for battery in bank]
-        total_joltage += find_highest_joltage(batteries, n)
-    return total_joltage
+    return solve(puzzle_input, 12)
 
 
 def main():
