@@ -3,43 +3,35 @@ from itertools import combinations
 from collections import deque
 
 
+def find_highest_joltage(bank, n):
+    battery_stack, batteries_to_remove = [], len(bank) - n
+
+    for digit in bank:
+        while len(battery_stack) > 0 and battery_stack[-1] < digit and batteries_to_remove > 0:
+            battery_stack.pop()
+            batteries_to_remove -= 1
+        battery_stack.append(digit)
+    print(battery_stack)
+
+    value = ""
+    for digit in range(n):
+        value += str(battery_stack[digit])
+    return int(value)
+
+
 def part_one(puzzle_input):
-    total_joltage = 0
+    total_joltage, n = 0, 2
     for bank in puzzle_input:
-        highest = 0
-        for perm in combinations(range(len(bank)), 2):
-            joltage = int(f"{bank[perm[0]]}{bank[perm[1]]}")
-            if (joltage > highest):
-                highest = joltage
-        total_joltage += highest
+        batteries = [int(battery) for battery in bank]
+        total_joltage += find_highest_joltage(batteries, n)
     return total_joltage
 
 
 def part_two(puzzle_input):
-    total_joltage = 0
-    n = 12
-    total_banks = len(puzzle_input)
-
-    for bank_idx, bank in enumerate(puzzle_input, 1):
-        queue = deque([(int(bank[i]), i + 1)
-                      for i in range(len(bank) - n + 1)])
-        highest = 0
-        while len(queue) > 0:
-            sequence, next_index = queue.popleft()
-
-            if sequence > highest and len(str(sequence)) == n:
-                highest = sequence
-
-            if len(str(sequence)) < n:
-                remaining_len = n - len(str(sequence))
-                max_possible = int(f"{sequence}{'9' * remaining_len}")
-                if max_possible <= highest:
-                    continue
-
-                for j in range(next_index, len(bank)):
-                    queue.append((sequence * 10 + int(bank[j]), j + 1))
-        total_joltage += highest
-        print(f"Completed bank {bank_idx}/{total_banks}")
+    total_joltage, n = 0, 12
+    for bank in puzzle_input:
+        batteries = [int(battery) for battery in bank]
+        total_joltage += find_highest_joltage(batteries, n)
     return total_joltage
 
 
