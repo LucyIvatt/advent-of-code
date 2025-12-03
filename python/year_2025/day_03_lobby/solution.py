@@ -12,7 +12,7 @@ def find_highest_joltage(bank, n):
 
 
 def solve(puzzle_input, n):
-    return sum(find_highest_joltage([int(battery)for battery in bank], n) for bank in puzzle_input)
+    return sum(find_highest_joltage([int(battery) for battery in bank], n) for bank in puzzle_input)
 
 
 def part_one(puzzle_input):

@@ -1,11 +1,8 @@
 from python.helpers.aoc_utils import input_data, time_function
 
 
-def parse_input(puzzle_input):
-    return [(line[0], int(line[1:])) for line in puzzle_input]
-
-
-def calculateRotation(pos, direction, value):
+def calculate_rotation(pos, direction, value):
+    """Calculate final position of the dial after rotation and the number of times it crossed zero."""
     full_rotations = value // 100
     step = value if direction == "R" else -value
     new_pos = (pos + step) % 100
@@ -23,25 +20,24 @@ def calculateRotation(pos, direction, value):
     return new_pos, rotations
 
 
-def part_one(puzzle_input):
-    count, pos = 0, 50
-    for (direction, value) in parse_input(puzzle_input):
-        pos, _ = calculateRotation(pos, direction, value)
-        count += (pos == 0)
+def solve(puzzle_input, count_fn):
+    pos, count = 50, 0
+    for direction, value in [(line[0], int(line[1:])) for line in puzzle_input]:
+        pos, rotations = calculate_rotation(pos, direction, value)
+        count += count_fn(pos, rotations)
     return count
+
+
+def part_one(puzzle_input):
+    return solve(puzzle_input, lambda pos, _: pos == 0)
 
 
 def part_two(puzzle_input):
-    count, pos = 0, 50
-    for (direction, value) in parse_input(puzzle_input):
-        pos, passedZero = calculateRotation(pos, direction, value)
-        count += passedZero
-    return count
+    return solve(puzzle_input, lambda _, rotations: rotations)
 
 
 def main():
-    puzzle_input = input_data(
-        "python/year_2025/day_01_secret_entrance/input.txt")
+    puzzle_input = input_data("python/year_2025/day_01_secret_entrance/input.txt")
 
     p1, p1_time = time_function(part_one, puzzle_input)
     p2, p2_time = time_function(part_two, puzzle_input)

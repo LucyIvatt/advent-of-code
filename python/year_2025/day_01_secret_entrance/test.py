@@ -1,6 +1,7 @@
 import unittest
 
-from python.year_2025.day_01_secret_entrance.solution import input_data, part_one, part_two, calculateRotation
+from python.year_2025.day_01_secret_entrance.solution import input_data, part_one, part_two, calculate_rotation
+
 
 class TestDay01(unittest.TestCase):
     @classmethod
@@ -8,7 +9,7 @@ class TestDay01(unittest.TestCase):
         cls.example = input_data("python/year_2025/day_01_secret_entrance/example.txt")
         cls.puzzle_input = input_data("python/year_2025/day_01_secret_entrance/input.txt")
 
-    def test_calculateRotation(self):   
+    def test_calculate_rotation(self):
         test_cases = [
             # Basic moves (no wrap)
             {"pos": 50, "dir": "L", "steps": 50, "expected": (0, 1), "name": "Left exact wrap"},
@@ -17,8 +18,8 @@ class TestDay01(unittest.TestCase):
             {"pos": 0,  "dir": "R", "steps": 50, "expected": (50, 0), "name": "Right from zero"},
 
             # Larger moves with multiple wraps
-            {"pos": 5,  "dir": "L", "steps": 105, "expected": (0, 2), "name": "Left multiwrap"},
-            {"pos": 5,  "dir": "R", "steps": 105, "expected": (10, 1), "name": "Right multiwrap"},
+            {"pos": 5,  "dir": "L", "steps": 105, "expected": (0, 2), "name": "Left wrap"},
+            {"pos": 5,  "dir": "R", "steps": 105, "expected": (10, 1), "name": "Right wrap"},
             {"pos": 42, "dir": "L", "steps": 200, "expected": (42, 2), "name": "Left large exact"},
             {"pos": 42, "dir": "R", "steps": 200, "expected": (42, 2), "name": "Right large exact"},
 
@@ -33,9 +34,8 @@ class TestDay01(unittest.TestCase):
 
         for case in test_cases:
             with self.subTest(case=case["name"]):
-                result = calculateRotation(case["pos"], case["dir"], case["steps"])
+                result = calculate_rotation(case["pos"], case["dir"], case["steps"])
                 self.assertEqual(result, case["expected"])
-
 
     def test_p1_example(self):
         """
@@ -66,6 +66,7 @@ class TestDay01(unittest.TestCase):
         """
         self.assertEqual(part_two(self.__class__.puzzle_input), 6561)
         pass
+
 
 if __name__ == '__main__':
     unittest.main()
