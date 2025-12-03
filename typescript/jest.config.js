@@ -1,12 +1,19 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
-export const testEnvironment = "node";
-export const transform = {
-  "^.+.tsx?$": ["ts-jest", {}],
-};
 export default {
   testEnvironment: "node",
   transform: {
-    "^.+.tsx?$": ["ts-jest", {}],
+    "^.+.tsx?$": [
+      "ts-jest",
+      {
+        isolatedModules: true,
+        tsconfig: {
+          esModuleInterop: true,
+          allowSyntheticDefaultImports: true,
+        },
+      },
+    ],
   },
   testPathIgnorePatterns: [".d.ts", ".js"],
+  maxWorkers: "50%",
+  cache: true,
 };
