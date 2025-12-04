@@ -16,7 +16,7 @@ class Direction(str, Enum):
 
 
 STRAIGHT_DIRECTIONS = [Direction.North, Direction.East, Direction.South, Direction.West]
-DIAGONAL_DIRECTIONS = [Direction.NorthEast, Direction.SouthEast, Direction.SouthWest, Direction.NorthWest, ]
+DIAGONAL_DIRECTIONS = [Direction.NorthEast, Direction.SouthEast, Direction.SouthWest, Direction.NorthWest]
 
 """ Mapping from `Direction` to (dx, dy) offsets for a single-step move in that direction."""
 DIRECTION_OFFSETS = {
@@ -39,3 +39,21 @@ def coord_equals(a, b) -> bool:
       b: A (x, y) coordinate tuple.
     """
     return a[0] == b[0] and a[1] == b[1]
+
+
+class Grid:
+    def __init__(self, array):
+        self.array = array
+
+    def is_valid_location(self, i, j):
+        return i >= 0 and i < len(self.array) and j >= 0 and j < len(self.array[i])
+
+    def get_adjacent(self, i, j, diagonals=False):
+        directions = [e.value for e in Direction] if diagonals else STRAIGHT_DIRECTIONS
+        result = []
+        for direction in directions:
+            di, dj = DIRECTION_OFFSETS[direction]
+            ni, nj = i + di, j + dj
+            if self.is_valid_location(ni, nj):
+                result.append((self.array[ni][nj], (ni, nj)))
+        return result
