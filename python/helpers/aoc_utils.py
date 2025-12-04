@@ -64,9 +64,16 @@ def transpose_list(lst):
 
 class Direction(Enum):
     NORTH = (-1, 0)
-    EAST = (0, +1)
-    SOUTH = (+1, 0)
+    EAST = (0, 1)
+    SOUTH = (1, 0)
     WEST = (0, -1)
+
+
+class DiagonalDirections(Enum):
+    SOUTH_EAST = (1, 1)
+    SOUTH_WEST = (1, -1)
+    NORTH_WEST = (-1, -1)
+    NORTH_EAST = (-1, 1)
 
 
 def split_by_empty_line(puzzle_input):

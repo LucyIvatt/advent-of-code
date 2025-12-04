@@ -88,7 +88,7 @@ def main():
     puzzle_input = input_data("python/year_2023/day_10_pipe_maze/input.txt")
 
     p1, p1_time = time_function(part_one, puzzle_input)
-    # p2, p2_time = time_function(part_two, puzzle_input)
+    p2, p2_time = time_function(part_two, puzzle_input)
 
     print("--------------------------------------")
     print("Day 10: pipe_maze")
