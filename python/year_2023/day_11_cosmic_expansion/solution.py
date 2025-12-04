@@ -1,4 +1,4 @@
-from python.helpers.aoc_utils import input_data, time_function, manhattan_distance
+from python.helpers.misc import input_data, time_function, manhattan_distance
 from itertools import combinations
 
 

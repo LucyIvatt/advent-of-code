@@ -1,4 +1,4 @@
-from python.helpers.aoc_utils import input_data, time_function, transpose_list, split_by_empty_line
+from python.helpers.misc import input_data, time_function, transpose_list, split_by_empty_line
 from itertools import groupby
 
 

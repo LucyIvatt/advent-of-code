@@ -1,4 +1,4 @@
-from python.helpers.aoc_utils import input_data, time_function, find_element_location_2d_list, Direction
+from python.helpers.misc import input_data, time_function, find_element_location_2d_list, Direction
 import math
 
 

@@ -1,4 +1,4 @@
-from python.helpers.aoc_utils import input_data, time_function
+from python.helpers.misc import input_data, time_function
 import re
 import math
 

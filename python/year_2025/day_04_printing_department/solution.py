@@ -1,4 +1,4 @@
-from python.helpers.aoc_utils import DiagonalDirections, Direction, input_data, time_function
+from python.helpers.misc import DiagonalDirections, Direction, input_data, time_function
 
 
 def part_one(puzzle_input):

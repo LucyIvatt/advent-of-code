@@ -1,4 +1,4 @@
-from python.helpers.aoc_utils import input_data, time_function
+from python.helpers.misc import input_data, time_function
 from enum import Enum
 from collections import Counter
 

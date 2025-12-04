@@ -1,6 +1,6 @@
 import re
 
-from python.helpers.aoc_utils import input_data
+from python.helpers.misc import input_data
 
 
 def part_one_original(puzzle_input):

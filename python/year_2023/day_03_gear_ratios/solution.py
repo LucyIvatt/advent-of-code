@@ -1,6 +1,6 @@
 import re
 from collections import defaultdict
-from python.helpers.aoc_utils import input_data, get_adjacent_coords, time_function
+from python.helpers.misc import input_data, get_adjacent_coords, time_function
 
 DIGIT_REGEX = r'\b\d+\b'
 

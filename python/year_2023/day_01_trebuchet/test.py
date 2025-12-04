@@ -1,7 +1,7 @@
 import unittest
 
 from python.year_2023.day_01_trebuchet.solution import answer, find_numbers
-from python.helpers.aoc_utils import input_data
+from python.helpers.misc import input_data
 
 
 class TestDay01(unittest.TestCase):

@@ -1,4 +1,4 @@
-from python.helpers.aoc_utils import input_data, time_function, Direction
+from python.helpers.misc import input_data, time_function, Direction
 
 REFLECT_DIRS = {("|", Direction.EAST): [Direction.NORTH, Direction.SOUTH],
                 ("|", Direction.WEST): [Direction.NORTH, Direction.SOUTH],

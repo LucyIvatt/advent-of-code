@@ -1,4 +1,4 @@
-from python.helpers.aoc_utils import input_data, time_function, Direction
+from python.helpers.misc import input_data, time_function, Direction
 
 TOTAL_CYCLES = 1_000_000_000
 

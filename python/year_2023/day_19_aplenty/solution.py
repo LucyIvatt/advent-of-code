@@ -1,6 +1,6 @@
 from functools import reduce
 from itertools import groupby
-from python.helpers.aoc_utils import input_data, time_function, split_by_empty_line
+from python.helpers.misc import input_data, time_function, split_by_empty_line
 import re
 import time
 
