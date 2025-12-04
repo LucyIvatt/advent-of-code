@@ -16,7 +16,22 @@ def part_one(puzzle_input):
 
 
 def part_two(puzzle_input):
-    pass
+    room = [[char for char in row] for row in puzzle_input]
+    diffs = [direction.value for direction in Direction] + [dir.value for dir in DiagonalDirections]
+    accessible = 0
+    updates = True
+    while updates:
+        updates = False
+        for i in range(len(room)):
+            for j in range(len(room[i])):
+                if (room[i][j]) == "@":
+                    adj = [room[i+di][j+dj] for di, dj in diffs if (0 <= i+di < len(room)) and (0 <= j+dj < len(room[i]))]
+                    if adj.count("@") < 4:
+                        updates = True
+                        accessible += 1
+                        room[i][j] = "."
+
+    return accessible
 
 
 def main():
