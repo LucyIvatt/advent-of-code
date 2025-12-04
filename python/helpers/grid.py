@@ -45,15 +45,34 @@ class Grid:
     def __init__(self, array):
         self.array = array
 
-    def is_valid_location(self, i, j):
+    @property
+    def height(self): return len(self.array)
+    @property
+    def width(self): return len(self.array[0])
+
+    def get(self, i, j):
+        return self.array[i][j]
+
+    def set(self, i, j, value):
+        self.array[i][j] = value
+
+    def iterate(self):
+        for i in range(self.height):
+            for j in range(len(self.array[i])):
+                yield i, j
+
+    def in_bounds(self, i, j):
         return i >= 0 and i < len(self.array) and j >= 0 and j < len(self.array[i])
 
-    def get_adjacent(self, i, j, diagonals=False):
+    def get_neighbours(self, i, j, diagonals=False):
         directions = [e.value for e in Direction] if diagonals else STRAIGHT_DIRECTIONS
         result = []
         for direction in directions:
             di, dj = DIRECTION_OFFSETS[direction]
             ni, nj = i + di, j + dj
-            if self.is_valid_location(ni, nj):
+            if self.in_bounds(ni, nj):
                 result.append((self.array[ni][nj], (ni, nj)))
         return result
+
+    def count_neighbors(self, i, j, predicate, diagonals=True):
+        return sum(1 for v, _ in self.get_neighbours(i, j, diagonals=diagonals) if predicate(v))

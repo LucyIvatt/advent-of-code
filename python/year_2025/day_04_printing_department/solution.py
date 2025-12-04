@@ -1,17 +1,13 @@
 from python.helpers.grid import Grid
-from python.helpers.misc import DiagonalDirections, Direction, input_data, time_function
+from python.helpers.misc import input_data, time_function
 
 
 def part_one(puzzle_input):
     grid = Grid([[char for char in row] for row in puzzle_input])
     accessible = 0
-    for i in range(len(grid.array)):
-        for j in range(len(grid.array[i])):
-            if (grid.array[i][j]) == "@":
-                adj = grid.get_adjacent(i, j, diagonals=True)
-                if [val for val, _coord in adj].count("@") < 4:
-                    accessible += 1
-
+    for i, j in grid.iterate():
+        if grid.get(i, j) == "@" and grid.count_neighbors(i, j, lambda v: v == "@", diagonals=True) < 4:
+            accessible += 1
     return accessible
 
 
@@ -21,14 +17,11 @@ def part_two(puzzle_input):
     updates = True
     while updates:
         updates = False
-        for i in range(len(grid.array)):
-            for j in range(len(grid.array[i])):
-                if (grid.array[i][j]) == "@":
-                    adj = grid.get_adjacent(i, j, diagonals=True)
-                    if [val for val, _coord in adj].count("@") < 4:
-                        accessible += 1
-                        updates = True
-                        grid.array[i][j] = "."
+        for i, j in grid.iterate():
+            if grid.get(i, j) == "@" and grid.count_neighbors(i, j, lambda v: v == "@", diagonals=True) < 4:
+                accessible += 1
+                updates = True
+                grid.array[i][j] = "."
     return accessible
 
 
