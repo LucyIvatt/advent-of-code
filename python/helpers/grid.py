@@ -80,3 +80,18 @@ class Grid:
 
     def count_neighbors(self, i, j, predicate, diagonals=True):
         return sum(1 for v, _ in self.get_neighbours(i, j, diagonals=diagonals) if predicate(v))
+
+    def neighbour_coords(self, i, j, diagonals=False):
+        """Yield coordinates of neighbouring cells (not values)."""
+        for _, coord in self.get_neighbours(i, j, diagonals=diagonals):
+            yield coord
+
+    def find_all(self, value):
+        """Yield all (i, j) coordinates where grid[i][j] == value."""
+        for i, j in self.iterate():
+            if self.get(i, j) == value:
+                yield i, j
+
+    def clone(self):
+        """Return a deep copy of the grid."""
+        return Grid([row[:] for row in self.array])
