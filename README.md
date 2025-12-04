@@ -18,7 +18,7 @@ Python: 🐍 Typescript: ⌨️
 | Day 1  |    ⭐     |    ⭐     |    ⭐     |    ⭐     |    ⭐     |
 | Day 2  |    ⭐     |    ⭐     |    ⭐     |    ⭐     |    ⭐     |
 | Day 3  |    ⭐     |    ⭐     |    ⭐     |    ⭐     |    ⭐     |
-| Day 4  |    ⭐     |    ⭐     |    ⭐     |    ⭐     |           |
+| Day 4  |    ⭐     |    ⭐     |    ⭐     |    ⭐     |     ⭐    |
 | Day 5  |    ⭐     |    ⭐     |     ⭑     |    ⭐     |           |
 | Day 6  |    ⭐     |    ⭐     |    ⭐     |    ⭐     |           |
 | Day 7  |    ⭐     |    ⭐     |    ⭐     |    ⭐     |           |
@@ -40,7 +40,7 @@ Python: 🐍 Typescript: ⌨️
 | Day 23 |           |           |           |           |    ➖       |
 | Day 24 |           |           |           |           |    ➖       |
 | Day 25 |           |           |           |           |     ➖      |
-| Total  |    34/50     |    30/50     |    28/50     |    38/50     |     6/6      |
+| Total  |    34/50     |    30/50     |    28/50     |    38/50     |     8/8      |
 | %  |    68%     |    60%     |    56%     |    76%    |          |
 
 _\*with the amount of help I needed from reddit & friends, I don't think p2 for this one reaaaally counts_ 😂
