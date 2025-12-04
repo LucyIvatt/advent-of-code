@@ -3,7 +3,7 @@ from python.helpers.misc import input_data, time_function
 
 
 def part_one(puzzle_input):
-    grid = Grid([[char for char in row] for row in puzzle_input])
+    grid = Grid.from_puzzle_input(puzzle_input)
     accessible = 0
     for i, j in grid.iterate():
         if grid.get(i, j) == "@" and grid.count_neighbors(i, j, lambda v: v == "@", diagonals=True) < 4:
@@ -12,7 +12,7 @@ def part_one(puzzle_input):
 
 
 def part_two(puzzle_input):
-    grid = Grid([[char for char in row] for row in puzzle_input])
+    grid = Grid.from_puzzle_input(puzzle_input)
     accessible = 0
     updates = True
     while updates:

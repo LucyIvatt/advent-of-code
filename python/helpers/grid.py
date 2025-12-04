@@ -45,6 +45,10 @@ class Grid:
     def __init__(self, array):
         self.array = array
 
+    @classmethod
+    def from_puzzle_input(cls, lines):
+        return cls([list(line) for line in lines])
+
     @property
     def height(self): return len(self.array)
     @property
