@@ -14,17 +14,12 @@ def merge_ranges(ranges):
 
             if (lowest[VALUE][0] == highest[VALUE][0]):
                 merged = [lowest[VALUE][0], max(lowest[VALUE][1], highest[VALUE][1])]
-                print(f"Merging ranges at indices {lowest[INDEX]} & {highest[INDEX]}: {ranges[lowest[INDEX]]} + {ranges[highest[INDEX]]} -> {merged}")
-                print(f"Deleting range at index {highest[INDEX]}: {ranges[highest[INDEX]]}")
                 ranges[lowest[INDEX]] = merged
                 del ranges[highest[INDEX]]
                 break
 
             elif (highest[VALUE][0] <= lowest[VALUE][1]):
                 merged = [lowest[VALUE][0], max(lowest[VALUE][1], highest[VALUE][1])]
-                print(f"Merging overlapping ranges at indices {lowest[INDEX]} & {highest[INDEX]}: {ranges[lowest[INDEX]]} + {ranges[highest[INDEX]]} -> {merged}")
-                print(f"Ranges before deletion: {ranges}")
-                print(f"Deleting range at index {highest[INDEX]}: {ranges[highest[INDEX]]}")
                 ranges[lowest[INDEX]] = merged
                 del ranges[highest[INDEX]]
                 break
