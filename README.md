@@ -2,7 +2,7 @@
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 
-This repository contains all of my solutions for the [advent of code](https://adventofcode.com/) challenges between 2021-2024.
+This repository contains all of my solutions for the [advent of code](https://adventofcode.com/) challenges between 2021-2025.
 
 All solutions are written in Python or Typescript.
 
