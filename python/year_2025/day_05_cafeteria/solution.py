@@ -1,6 +1,6 @@
 import itertools
-import time
 from python.helpers.misc import input_data, split_by_empty_line, time_function
+from python.helpers.range import Range
 
 INDEX = 0
 VALUE = 1
@@ -29,16 +29,8 @@ def merge_ranges(ranges):
 
 def part_one(puzzle_input):
     ranges, ids = split_by_empty_line(puzzle_input)
-    fresh = 0
-
-    for id in ids:
-        for range in ranges:
-            lower, upper = range.split("-")
-            if int(lower) <= int(id) <= int(upper):
-                fresh += 1
-                break
-
-    return fresh
+    range_objs = [Range.from_string(r) for r in ranges]
+    return sum(1 for id in ids if any(r.is_within_range(id) for r in range_objs))
 
 
 def part_two(puzzle_input):
@@ -51,7 +43,7 @@ def part_two(puzzle_input):
 
 
 def main():
-    puzzle_input = input_data("python/year_2025/day_05_cafeteria/input.txt")
+    puzzle_input = input_data("python/year_2025/day_05_cafeteria/example.txt")
 
     p1, p1_time = time_function(part_one, puzzle_input)
     p2, p2_time = time_function(part_two, puzzle_input)
