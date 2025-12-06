@@ -3,56 +3,25 @@
 from enum import Enum
 
 
-class Direction(str, Enum):
-    """Compass directions used for grid navigation."""
-    North = "North"
-    NorthEast = "NorthEast"
-    East = "East"
-    SouthEast = "SouthEast"
-    South = "South"
-    SouthWest = "SouthWest"
-    West = "West"
-    NorthWest = "NorthWest"
-
-
-STRAIGHT_DIRECTIONS = [Direction.North, Direction.East, Direction.South, Direction.West]
-DIAGONAL_DIRECTIONS = [Direction.NorthEast, Direction.SouthEast, Direction.SouthWest, Direction.NorthWest]
-
-""" Mapping from `Direction` to (dx, dy) offsets for a single-step move in that direction."""
-DIRECTION_OFFSETS = {
-    Direction.North: (0, -1),
-    Direction.NorthEast: (1, -1),
-    Direction.East: (1, 0),
-    Direction.SouthEast: (1, 1),
-    Direction.South: (0, 1),
-    Direction.SouthWest: (-1, 1),
-    Direction.West: (-1, 0),
-    Direction.NorthWest: (-1, -1),
-}
+STRAIGHT_DIRS = [(0, -1), (1, 0), (0, 1), (-1, 0)]  # N E S W
+DIAGONAL_DIRS = [(1, -1), (1, 1), (-1, 1), (-1, -1)]  # NE SE SW NW
+ALL_DIRS = STRAIGHT_DIRS + DIAGONAL_DIRS
 
 
 def coord_equals(a, b) -> bool:
-    """Return True if coordinates `a` and `b` are equal.
-
-    Args:
-      a: A (x, y) coordinate tuple.
-      b: A (x, y) coordinate tuple.
-    """
+    """Return True if coordinates `a` and `b` are equal."""
     return a[0] == b[0] and a[1] == b[1]
 
 
 class Grid:
     def __init__(self, array):
         self.array = array
+        self.height = len(array)
+        self.width = len(array[0])
 
     @classmethod
     def from_puzzle_input(cls, lines):
         return cls([list(line) for line in lines])
-
-    @property
-    def height(self): return len(self.array)
-    @property
-    def width(self): return len(self.array[0])
 
     def get(self, i, j):
         return self.array[i][j]
@@ -62,36 +31,39 @@ class Grid:
 
     def iterate(self):
         for i in range(self.height):
-            for j in range(len(self.array[i])):
+            for j in range(self.width):
                 yield i, j
 
     def in_bounds(self, i, j):
-        return i >= 0 and i < len(self.array) and j >= 0 and j < len(self.array[i])
-
-    def get_neighbours(self, i, j, diagonals=False):
-        directions = [e.value for e in Direction] if diagonals else STRAIGHT_DIRECTIONS
-        result = []
-        for direction in directions:
-            di, dj = DIRECTION_OFFSETS[direction]
-            ni, nj = i + di, j + dj
-            if self.in_bounds(ni, nj):
-                result.append((self.array[ni][nj], (ni, nj)))
-        return result
-
-    def count_neighbors(self, i, j, predicate, diagonals=True):
-        return sum(1 for v, _ in self.get_neighbours(i, j, diagonals=diagonals) if predicate(v))
+        return 0 <= i < self.height and 0 <= j < self.width
 
     def neighbour_coords(self, i, j, diagonals=False):
-        """Yield coordinates of neighbouring cells (not values)."""
-        for _, coord in self.get_neighbours(i, j, diagonals=diagonals):
-            yield coord
+        """Yield neighbour coordinate tuples."""
+        dirs = ALL_DIRS if diagonals else STRAIGHT_DIRS
+        h, w = self.height, self.width
 
-    def find_all(self, value):
-        """Yield all (i, j) coordinates where grid[i][j] == value."""
-        for i, j in self.iterate():
-            if self.get(i, j) == value:
-                yield i, j
+        for di, dj in dirs:
+            ni = i + di
+            nj = j + dj
+            if 0 <= ni < h and 0 <= nj < w:
+                yield (ni, nj)
 
-    def clone(self):
-        """Return a deep copy of the grid."""
-        return Grid([row[:] for row in self.array])
+    def get_neighbours(self, i, j, diagonals=False):
+        """Yield (value, (i,j)) pairs of neighbours."""
+        arr = self.array
+        for ni, nj in self.neighbour_coords(i, j, diagonals=diagonals):
+            yield arr[ni][nj], (ni, nj)
+
+    def count_neighbors(self, i, j, value, diagonals=True):
+        """Count neighbours whose value == `value`"""
+        arr = self.array
+        h, w = self.height, self.width
+        count = 0
+
+        for di, dj in ALL_DIRS if diagonals else STRAIGHT_DIRS:
+            ni = i + di
+            nj = j + dj
+            if 0 <= ni < h and 0 <= nj < w and arr[ni][nj] == value:
+                count += 1
+
+        return count

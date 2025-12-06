@@ -3,7 +3,7 @@ from python.helpers.misc import input_data, time_function
 
 
 def is_accessible(grid, i, j):
-    return grid.get(i, j) == "@" and grid.count_neighbors(i, j, lambda v: v == "@", diagonals=True) < 4
+    return grid.get(i, j) == "@" and grid.count_neighbors(i, j, "@") < 4
 
 
 def part_one(puzzle_input):
