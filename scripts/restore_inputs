@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Load environment variables from .env file
-source .env
-
 # Function to display script usage information
 display_help() {
     echo "Usage: $0"
