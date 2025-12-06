@@ -6,13 +6,13 @@ import os
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 
-def input_data(filename):
+def input_data(filename, strip=True):
     """Returns the data imported from file, resolving paths relative to project root."""
     if not os.path.isabs(filename):
         filename = os.path.join(PROJECT_ROOT, filename)
 
     with open(filename, "r") as file:
-        return [line.strip() for line in file.readlines()]
+        return [line.strip() if strip else line for line in file.readlines()]
 
 
 def get_adjacent_coords(coords, x_limit, y_limit, diagonal=False):
