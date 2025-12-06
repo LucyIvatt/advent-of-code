@@ -6,6 +6,9 @@ class Range:
     def __str__(self):
         return f"Range({self.lower}-{self.upper} - length={self.length})"
 
+    def __repr__(self):
+        return f"Range({self.lower}-{self.upper} - length={self.length})"
+
     @classmethod
     def from_string(cls, range_string):
         return cls(*range_string.split("-"))

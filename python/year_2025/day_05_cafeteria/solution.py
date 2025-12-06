@@ -10,16 +10,17 @@ def merge_ranges(ranges):
     current_index = 0
     while current_index <= len(ranges):
         for (i, val_i), (j, val_j) in itertools.combinations(list(enumerate(ranges)), 2):
-            lowest, highest = ((i, val_i), (j, val_j)) if val_i[0] < val_j[0] else ((j, val_j), (i, val_i))
 
-            if (lowest[VALUE][0] == highest[VALUE][0]):
-                merged = [lowest[VALUE][0], max(lowest[VALUE][1], highest[VALUE][1])]
+            lowest, highest = ((i, val_i), (j, val_j)) if val_i.lower < val_j.lower else ((j, val_j), (i, val_i))
+
+            if (lowest[VALUE].lower == highest[VALUE].lower):
+                merged = Range(lowest[VALUE].lower, max(lowest[VALUE].upper, highest[VALUE].upper))
                 ranges[lowest[INDEX]] = merged
                 del ranges[highest[INDEX]]
                 break
 
-            elif (highest[VALUE][0] <= lowest[VALUE][1]):
-                merged = [lowest[VALUE][0], max(lowest[VALUE][1], highest[VALUE][1])]
+            elif (highest[VALUE].lower <= lowest[VALUE].upper):
+                merged = Range(lowest[VALUE].lower, max(lowest[VALUE].upper, highest[VALUE].upper))
                 ranges[lowest[INDEX]] = merged
                 del ranges[highest[INDEX]]
                 break
@@ -34,12 +35,11 @@ def part_one(puzzle_input):
 
 
 def part_two(puzzle_input):
-    ranges = [tuple(map(int, bound.split("-"))) for bound in split_by_empty_line(puzzle_input)[0]]
+    range_objs = [Range.from_string(r) for r in split_by_empty_line(puzzle_input)[0]]
     fresh = 0
-    merged_ranges = merge_ranges(ranges)
-    for range in merged_ranges:
-        fresh += range[1] - range[0] + 1
-    return fresh
+    merged_ranges = merge_ranges(range_objs)
+    print(merged_ranges)
+    return sum(r.length for r in merged_ranges)
 
 
 def main():
