@@ -18,3 +18,28 @@ class Range:
 
     def is_within_range(self, value):
         return self.lower <= int(value) <= self.upper
+
+    def overlaps(self, other):
+        return self.lower <= other.upper and other.lower <= self.upper
+
+    def merge(self, other):
+        if not self.overlaps(other):
+            raise ValueError("Cannot merge ranges which do not overlap")
+        else:
+            return Range(min(self.lower, other.lower), max(self.upper, other.upper))
+
+
+def merge_ranges(ranges):
+    """Merge overlapping ranges using sorting."""
+
+    ranges.sort(key=lambda r: r.lower)
+    merged = [ranges[0]]
+
+    for current in ranges[1:]:
+        last = merged[-1]
+        if last.overlaps(current):
+            merged[-1] = last.merge(current)
+        else:
+            merged.append(current)
+
+    return merged
