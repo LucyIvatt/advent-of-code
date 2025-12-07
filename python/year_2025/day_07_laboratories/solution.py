@@ -1,33 +1,35 @@
 from python.helpers.misc import input_data, time_function
-from collections import defaultdict
+from collections import Counter
 
 
 def track_beams(puzzle_input):
-    start_location = puzzle_input[0].index("S")
+    start = puzzle_input[0].index("S")
 
-    paths = defaultdict(lambda: 0)
-    paths[start_location] = 1
+    path_counts = Counter({start: 1})
+    beams = {start}
 
-    beam_locations = set([start_location])
     split_count = 0
 
     for row in puzzle_input:
+        new_path_counts = Counter()
         new_beams = set()
-        new_paths = defaultdict(lambda: 0)
-        for beam in beam_locations:
+
+        for beam in beams:
+            path_count = path_counts[beam]
+
             if row[beam] == "^":
                 split_count += 1
-                new_beams.add(beam-1)
-                new_beams.add(beam+1)
-                new_paths[beam-1] += paths[beam]
-                new_paths[beam+1] += paths[beam]
+                for split_beam in (beam - 1, beam + 1):
+                    new_beams.add(split_beam)
+                    new_path_counts[split_beam] += path_count
             else:
                 new_beams.add(beam)
-                new_paths[beam] += paths[beam]
+                new_path_counts[beam] += path_count
 
-        beam_locations = new_beams
-        paths = new_paths
-    return split_count, paths
+        beams = new_beams
+        path_counts = new_path_counts
+
+    return split_count, path_counts
 
 
 def part_one(puzzle_input):
@@ -35,7 +37,6 @@ def part_one(puzzle_input):
 
 
 def part_two(puzzle_input):
-
     return sum(track_beams(puzzle_input)[1].values())
 
 
