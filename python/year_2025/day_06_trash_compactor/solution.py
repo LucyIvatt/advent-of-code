@@ -1,6 +1,4 @@
-from functools import reduce
 import math
-import operator
 from python.helpers.misc import input_data, time_function, transpose_list
 
 
@@ -19,14 +17,12 @@ def part_one(puzzle_input):
 def part_two(puzzle_input):
     symbols = puzzle_input[-1]
     indexes = [i for i, ch in enumerate(symbols) if ch in {"*", "+"}]
-
     split_problems = []
 
     # Split the numerical columns by using the index locations of the operators
     for line in [line.rstrip("\n") for line in puzzle_input]:
         parts = [line[start:end-1] for start, end in zip(indexes, indexes[1:])]
         parts.append(line[indexes[-1]:])   # last slice stays the same
-
         split_problems.append(parts)
 
     transpose = transpose_list(split_problems)
