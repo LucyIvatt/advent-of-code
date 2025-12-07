@@ -1,0 +1,44 @@
+import unittest
+
+from python.year_2025.day_07_laboratories.solution import input_data, part_one, part_two
+
+
+class TestDay07(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.example = input_data("python/year_2025/day_07_laboratories/example.txt")
+        cls.puzzle_input = input_data("python/year_2025/day_07_laboratories/input.txt")
+
+    def test_p1_example(self):
+        """
+        Tests Day 07 Part 1 using the example given in the scenario
+        """
+        self.assertEqual(part_one(self.__class__.example), 21)
+        pass
+
+    def test_p1_actual(self):
+        """
+        Tests the Day 07 Part 1 using my generated input. Used to check any edits
+        made to the program have not broken it.
+        """
+        self.assertEqual(part_one(self.__class__.puzzle_input), 1518)
+        pass
+
+    def test_p2_example(self):
+        """
+        Tests Day 07 Part 2 using the example given in the scenario.
+        """
+        # self.assertEqual(part_two(self.__class__.example), 0)
+        pass
+
+    def test_p2_actual(self):
+        """
+        Tests the Day 07 Part 2 using my generated input. Used to check any edits
+        made to the program have not broken it.
+        """
+        # self.assertEqual(part_two(self.__class__.puzzle_input), 0)
+        pass
+
+
+if __name__ == '__main__':
+    unittest.main()
