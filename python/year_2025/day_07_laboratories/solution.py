@@ -2,36 +2,21 @@ from python.helpers.misc import input_data, time_function
 from collections import defaultdict
 
 
-def part_one(puzzle_input):
-    beam_locations = set([puzzle_input[0].index("S")])
-    num_splits = 0
+def track_beams(puzzle_input):
+    start_location = puzzle_input[0].index("S")
 
-    for row in puzzle_input:
-        new_beams = set()
-        for beam in beam_locations:
-            if row[beam] == "^":
-                num_splits += 1
-                new_beams.add(beam-1)
-                new_beams.add(beam+1)
-            else:
-                new_beams.add(beam)
-        beam_locations = new_beams
-    print(beam_locations)
-    return num_splits
-
-
-def part_two(puzzle_input):
     paths = defaultdict(lambda: 0)
-    paths[puzzle_input[0].index("S")] = 1
+    paths[start_location] = 1
 
-    beam_locations = set([puzzle_input[0].index("S")])
+    beam_locations = set([start_location])
+    split_count = 0
 
     for row in puzzle_input:
         new_beams = set()
         new_paths = defaultdict(lambda: 0)
         for beam in beam_locations:
             if row[beam] == "^":
-                print("splitting")
+                split_count += 1
                 new_beams.add(beam-1)
                 new_beams.add(beam+1)
                 new_paths[beam-1] += paths[beam]
@@ -42,26 +27,16 @@ def part_two(puzzle_input):
 
         beam_locations = new_beams
         paths = new_paths
-        print(paths)
-        print(beam_locations)
-        print("----")
-    return sum(paths.values())
+    return split_count, paths
 
 
-#     s = Node(name="root", location=puzzle_input[0].index("S"))
-#     num_splits = 0
+def part_one(puzzle_input):
+    return track_beams(puzzle_input)[0]
 
-#     for i in range(1, len(puzzle_input)):
-#         for beam in [n for n in PreOrderIter(s) if n.is_leaf]:
-#             if puzzle_input[i][beam.location] == "^":
-#                 num_splits += 1
 
-#                 if (beam.location - 1 >= 0):
-#                     Node(name=f"left-{beam.location}-row{i}", location=beam.location-1, parent=beam)
-#                 if (beam.location + 1 < len(puzzle_input[i])):
-#                     Node(name=f"right-{beam.location}-row{i}", location=beam.location+1, parent=beam)
+def part_two(puzzle_input):
 
-#     return num_splits
+    return sum(track_beams(puzzle_input)[1].values())
 
 
 def main():
