@@ -4,10 +4,8 @@ from collections import Counter
 
 def track_beams(puzzle_input):
     start = puzzle_input[0].index("S")
-
     path_counts = Counter({start: 1})
     beams = {start}
-
     split_count = 0
 
     for row in puzzle_input:
