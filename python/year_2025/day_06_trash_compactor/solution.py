@@ -1,4 +1,5 @@
 from functools import reduce
+import math
 import operator
 from python.helpers.misc import input_data, time_function, transpose_list
 
@@ -9,8 +10,8 @@ def part_one(puzzle_input):
 
     for problem in transpose:
         op = problem[-1]
-        numbers = map(int, problem[:-1])
-        ans += sum(numbers) if op == "+" else reduce(operator.mul, numbers, 1)
+        nums = map(int, problem[:-1])
+        ans += sum(nums) if op == "+" else math.prod(nums)
 
     return ans
 
@@ -35,7 +36,7 @@ def part_two(puzzle_input):
     for problem in transpose:
         values, op = problem[:-1], problem[-1][0]
         nums = [int("".join(col[digit] for col in values)) for digit in range(len(values[0]))]
-        ans += sum(nums) if op == "+" else reduce(operator.mul, nums, 1)
+        ans += sum(nums) if op == "+" else math.prod(nums)
 
     return ans
 
