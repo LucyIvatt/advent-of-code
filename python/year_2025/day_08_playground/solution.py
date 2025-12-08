@@ -24,13 +24,16 @@ class Circuit:
         return tuple(node) in self.graph
 
     def merge(self, other):
-        dd = defaultdict(set)
-        for d in (self.graph, other.graph):
-            for key, neighbours in d.items():
-                for n in neighbours:
-                    dd[key].add(n)
-                    dd[n].add(key)
-        self.graph = dd
+        for node, neighbors in other.graph.items():
+            if node not in self.graph:
+                self.graph[node] = set()
+            self.graph[node].update(neighbors)
+        # Ensure all neighbors point back to the node
+        for node in self.graph:
+            for neighbor in self.graph[node]:
+                if neighbor not in self.graph:
+                    self.graph[neighbor] = set()
+                self.graph[neighbor].add(node)
 
     def clear(self):
         self.graph = defaultdict(set)
@@ -44,7 +47,7 @@ def straight_line_distance(first, second):
 
 
 def part_one(puzzle_input):
-    num_pairs = 1000
+    num_pairs = 10
     coords = [list(map(int, line.split(','))) for line in puzzle_input]
     distances = [((tuple(pair[0]), tuple(pair[1])), straight_line_distance(pair[0], pair[1]))
                  for pair in combinations(coords, 2)]
@@ -53,58 +56,58 @@ def part_one(puzzle_input):
     circuits = []
     connections = 0
     i = 0
+    start_time = time.time()
+
+    # Simple prints: provide readable runtime info for debugging
+    print(f"part_one: starting loop, num_pairs={num_pairs} total_candidates={len(sorted_distances)}")
     while connections < num_pairs:
         pair, distance = sorted_distances[i]
         i += 1
 
         box1, box2 = pair
-        # print("Attempting to connect ", box1, " and ", box2)
 
-        # No circuit containers either box
+        elapsed = time.time() - start_time
+        print(f"loop iter: i={i} connections={connections} elapsed={elapsed:.4f}s pair={pair} distance={distance:.4f} circuits={len(circuits)}")
+
+        # No circuit contains either box
         if all(not circuit.hasNode(box1) and not circuit.hasNode(box2) for circuit in circuits):
+            print(f"creating new circuit for {box1} <-> {box2} (distance={distance:.4f})")
             circuits.append(Circuit(box1, box2))
             connections += 1
-            # print("No circuit contains the boxes - creating new circuit")
-            # print([str(c) for c in circuits])
 
         # A circuit contains both boxes
         elif any(circuit.hasNode(box1) and circuit.hasNode(box2) for circuit in circuits):
-            # print("A circuit contains both boxes - skipping!")
+            print(f"both boxes already connected: {box1} & {box2} -- skipping")
             continue
 
+        #
+        elif any(circuit.hasNode(box1) for circuit in circuits) and all(not circuit.hasNode(box2) for circuit in circuits):
+            aaaa = next(i for i, c in enumerate(circuits) if c.hasNode(box1))
+            print(f"adding connection {box1} -> {box2} into circuit index {aaaa}")
+            circuits[aaaa].add_connection(box1, box2)
+            connections += 1
+
+        elif any(circuit.hasNode(box2) for circuit in circuits) and all(not circuit.hasNode(box1) for circuit in circuits):
+            aaaa = next(i for i, c in enumerate(circuits) if c.hasNode(box2))
+            print(f"adding connection {box1} -> {box2} into circuit index {aaaa}")
+            circuits[aaaa].add_connection(box1, box2)
+            connections += 1
+
         else:
-            for j in range(len(circuits)):
-                # A circuit contains one box (box 1)
-                if circuits[j].hasNode(box1) and all(not c.hasNode(box1) for c in circuits if c != circuits[j]):
-                    circuits[j].add_connection(box1, box2)
-                    connections += 1
-                    # print("A circuit contains box 1 - adding connection to box2")
-                    break
+            # Two different circuits contain the boxes
+            a = next(i for i, c in enumerate(circuits) if c.hasNode(box1))
+            b = next(i for i, c in enumerate(circuits) if c.hasNode(box2))
+            print(f"merging circuits: index {a} (box1) and index {b} (box2)")
 
-                    # A circuit contains one box (box 2)
-                elif circuits[j].hasNode(box2) and all(not c.hasNode(box2) for c in circuits if c != circuits[j]):
-                    circuits[j].add_connection(box2, box1)
-                    connections += 1
-                    # print("A circuit contains box 2 - adding connection to box1")
-                    break
+            if a > b:
+                a, b = b, a  # ensure b > a
+            circuits[a].merge(circuits[b])
+            circuits.pop(b)
 
-                # two diff circuits contain box
-                elif circuits[j].hasNode(box1) and any(c.hasNode(box2) for c in circuits if c != circuits[j]):
-                    index_2_c = next(i for i, c in enumerate(circuits) if c.hasNode(box2))
-                    circuits[j].merge(circuits[index_2_c])
-                    circuits.pop(index_2_c)
-                    connections += 1
-                    # print("Two diff circuits contain the boxes - merging")
-                    # print(str(c) for c in circuits)
-                    break
+            connections += 1
 
-            # print("----")
-            # print("ERROR I SHOULD NEVER GET HERE")
-            # print("box1", box1)
-            # print("box2", box2)
-            # print("circuits", [str(c) for c in circuits])
-            # print("----")
-            # break
+        # End of iteration summary
+        print(f"after iter: connections={connections} circuits={len(circuits)} top_sizes={sorted([c.get_size() for c in circuits], reverse=True)[:5]}")
 
     return math.prod(sorted([c.get_size() for c in circuits])[-3:])
 
@@ -114,7 +117,7 @@ def part_two(puzzle_input):
 
 
 def main():
-    puzzle_input = input_data("python/year_2025/day_08_playground/input.txt")
+    puzzle_input = input_data("python/year_2025/day_08_playground/example.txt")
 
     p1, p1_time = time_function(part_one, puzzle_input)
     p2, p2_time = time_function(part_two, puzzle_input)
