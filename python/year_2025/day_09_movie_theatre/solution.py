@@ -1,29 +1,120 @@
 from itertools import combinations
 from python.helpers.misc import input_data, time_function
 
+COORD_CACHE = {}
+
+
+def rect_edge_coords(c1, c2):
+    x1, y1 = c1
+    x2, y2 = c2
+
+    left = min(x1, x2)
+    right = max(x1, x2)
+    top = min(y1, y2)
+    bottom = max(y1, y2)
+
+    edges = set()
+
+    # Top edge
+    for x in range(left, right + 1):
+        edges.add((x, top))
+
+    # Bottom edge
+    for x in range(left, right + 1):
+        edges.add((x, bottom))
+
+    # Left edge
+    for y in range(top, bottom + 1):
+        edges.add((left, y))
+
+    # Right edge
+    for y in range(top, bottom + 1):
+        edges.add((right, y))
+
+    return edges
+
 
 def part_one(puzzle_input):
     highest_area = 0
 
     coords = [tuple(map(int, line.split(","))) for line in puzzle_input]
     for c in combinations(coords, 2):
-        print(c)
         area = abs(c[0][0]-c[1][0]+1) * abs(c[0][1] - c[1][1]+1)
         highest_area = max(highest_area, area)
     return highest_area
 
 
 def part_two(puzzle_input):
-    # extrapolate all the edge so we have a list of all edge coordinates
-    # for all four corners of the rectangle, cast a ray out until its out of bounds,
-    #   if coord is in the edge set, add to count of boundsary crosses
-    # if it crosses the boundary odd number of times its within the shape
-    # if its even its outside
-    pass
+    coords = [tuple(map(int, line.split(","))) for line in puzzle_input]
+    highest_area = 0
+
+    edge_coords = set()
+    for edge in range(len(coords)):
+        c1 = coords[edge]
+        c2 = coords[edge+1 if edge+1 < len(coords) else 0]
+
+        if c1[0] == c2[0]:
+            c1, c2 = (c1, c2) if c2[1] > c1[1] else (c2, c1)
+            # print(f"adding {c1[0]}, {c1[1]}-{c2[1]}")
+            for i in range(c1[1], c2[1]+1):
+                edge_coords.add((c1[0], i))
+        else:
+            c1, c2 = (c1, c2) if c2[0] > c1[0] else (c2, c1)
+
+            # print(f"adding {c1[0]}-{c2[0]}, {c1[1]}")
+            for i in range(c1[0], c2[0]+1):
+                edge_coords.add((i, c1[1]))
+
+    for c in combinations(coords, 2):
+        # print("verifying ", c)
+        c1 = c[0]
+        c2 = c[1]
+        edges_of_rect = rect_edge_coords(c1, c2)
+        valid = True
+        for coord in edges_of_rect:
+            if coord in edge_coords:
+                pass
+                # print(coord, "on edge so is still valid so far")
+            else:
+                if coord not in COORD_CACHE:
+                    # print(coord, "not on edge, so need to check - beginning ray trace")
+                    crossover_count = 0
+                    previously_hit_edge = False
+                    for r in range(coord[0], 0, -1):
+                        # print(r)
+                        ray_hit_edge = True if (r, coord[1]) in edge_coords else False
+                        if ray_hit_edge and not previously_hit_edge:
+                            # print("hit new edge")
+                            crossover_count += 1
+                            previously_hit_edge = True
+                        elif not ray_hit_edge and previously_hit_edge:
+                            # print("hit new open space")
+                            previously_hit_edge = False
+                        # else:
+                            # print("continuing")
+
+                    # print(crossover_count)
+                    if (crossover_count % 2 == 0):
+                        # print("invalid coord")
+                        valid = False
+                        COORD_CACHE[coord] = False
+                        break
+                    else:
+                        COORD_CACHE[coord] = True
+
+                else:
+                    valid = COORD_CACHE[coord]
+
+        if valid:
+            area = (abs(c[0][0]-c[1][0]) + 1) * (abs(c[0][1] - c[1][1]) + 1)
+            highest_area = max(highest_area, area)
+            # print(c, "is valid shape, adding area", area, "to highest if higher")
+
+    return highest_area
 
 
 def main():
-    puzzle_input = input_data("python/year_2025/day_09_movie_theatre/example.txt")
+    puzzle_input = input_data("python/year_2025/day_09_movie_theatre/input.txt")
 
     p1, p1_time = time_function(part_one, puzzle_input)
     p2, p2_time = time_function(part_two, puzzle_input)
