@@ -1,4 +1,5 @@
 from itertools import combinations
+from operator import itemgetter
 from python.helpers.misc import input_data, time_function
 
 COORD_CACHE = {}
@@ -34,17 +35,27 @@ def rect_edge_coords(c1, c2):
     return edges
 
 
-def part_one(puzzle_input):
+def get_distanced_rectangles(puzzle_input):
     highest_area = 0
+    sizes = []
 
     coords = [tuple(map(int, line.split(","))) for line in puzzle_input]
+
     for c in combinations(coords, 2):
         area = abs(c[0][0]-c[1][0]+1) * abs(c[0][1] - c[1][1]+1)
         highest_area = max(highest_area, area)
-    return highest_area
+        sizes.append([c, area])
+
+    sorted_distances = sorted(sizes, key=itemgetter(1), reverse=True)
+    return highest_area, sorted_distances
+
+
+def part_one(puzzle_input):
+    return get_distanced_rectangles(puzzle_input)[0]
 
 
 def part_two(puzzle_input):
+    rectangles_by_size = get_distanced_rectangles(puzzle_input)[1]
     coords = [tuple(map(int, line.split(","))) for line in puzzle_input]
     highest_area = 0
 
@@ -65,8 +76,8 @@ def part_two(puzzle_input):
             for i in range(c1[0], c2[0]+1):
                 edge_coords.add((i, c1[1]))
 
-    for c in combinations(coords, 2):
-        # print("verifying ", c)
+    for c, size in rectangles_by_size:
+        print("verifying ", c)
         c1 = c[0]
         c2 = c[1]
         edges_of_rect = rect_edge_coords(c1, c2)
@@ -106,11 +117,8 @@ def part_two(puzzle_input):
                     valid = COORD_CACHE[coord]
 
         if valid:
-            area = (abs(c[0][0]-c[1][0]) + 1) * (abs(c[0][1] - c[1][1]) + 1)
-            highest_area = max(highest_area, area)
+            return size
             # print(c, "is valid shape, adding area", area, "to highest if higher")
-
-    return highest_area
 
 
 def main():
