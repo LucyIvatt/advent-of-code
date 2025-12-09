@@ -57,6 +57,9 @@ def part_one(puzzle_input):
 def part_two(puzzle_input):
     rectangles_by_size = get_distanced_rectangles(puzzle_input)[1]
     coords = [tuple(map(int, line.split(","))) for line in puzzle_input]
+    pairs_to_check = len(rectangles_by_size)
+    index = next(i for i, item in enumerate(rectangles_by_size) if item[0] == ((5254, 66490), (94821, 50072)))
+    print(index)
     highest_area = 0
 
     edge_coords = set()
@@ -76,8 +79,12 @@ def part_two(puzzle_input):
             for i in range(c1[0], c2[0]+1):
                 edge_coords.add((i, c1[1]))
 
-    for c, size in rectangles_by_size:
-        print("verifying ", c)
+    for i in range(index, len(rectangles_by_size)):
+        c, size = rectangles_by_size[i]
+        # compute completion percentage for items checked from `index` to end
+        completion_pct = (i / pairs_to_check) * 100
+        print("verifying", c, "- completion", f"{completion_pct:.2f}%")
+
         c1 = c[0]
         c2 = c[1]
         edges_of_rect = rect_edge_coords(c1, c2)
