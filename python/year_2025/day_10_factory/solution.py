@@ -1,5 +1,7 @@
 import ast
+from collections import defaultdict
 import re
+import time
 from python.helpers.misc import input_data, time_function  # f
 from ast import literal_eval
 
@@ -11,12 +13,9 @@ def part_one(puzzle_input):
     for line in puzzle_input:
         m = re.match(pattern, line)
 
-        lights, buttons, joltage = m.groups()
+        lights, buttons, _ = m.groups()
 
-        buttons = [
-            [int(n) for n in c.strip("()").split(",") if n]
-            for c in buttons.split()
-        ]
+        buttons = [[int(n) for n in c.strip("()").split(",") if n] for c in buttons.split()]
 
         button_masks = []
         for btn in buttons:
@@ -30,10 +29,10 @@ def part_one(puzzle_input):
             if ch == "#":
                 lights_mask |= (1 << i)
 
-        press_count = 0
-        press_tracker = [(x, 0) for x in range(len(button_masks))]
         not_valid = True
+        press_count = 0
 
+        press_tracker = [(x, 0) for x in range(len(button_masks))]
         visited = {f"{x}-{y}" for x, y in press_tracker}
 
         while not_valid:
@@ -59,7 +58,48 @@ def part_one(puzzle_input):
 
 
 def part_two(puzzle_input):
-    pass
+    total_presses = 0
+    for line in puzzle_input:
+        m = re.match(pattern, line)
+
+        _, buttons, joltage = m.groups()
+
+        joltage_target = tuple(int(x) for x in joltage.strip("{}").split(","))
+
+        print(joltage)
+
+        buttons = [[int(n) for n in c.strip("()").split(",") if n] for c in buttons.split()]
+
+        press_count = 0
+        not_valid = True
+        visited = {}
+        first = (tuple(0 for _ in joltage_target))
+        press_tracker = [first]
+        visited = {first}
+
+        while not_valid:
+            press_count += 1
+            new_press_tracker = []
+
+            for current_joltage in press_tracker:
+                for button in buttons:
+                    new_joltage = list(current_joltage)
+
+                    for i in button:
+                        new_joltage[i] += 1
+                    new_joltage = tuple(new_joltage)
+
+                    if joltage_target == new_joltage:
+                        not_valid = False
+                        break
+                    else:
+                        if not any([a > b for a, b in zip(new_joltage, joltage_target)]) and new_joltage not in visited:
+                            visited.add(new_joltage)
+                            new_press_tracker.append(new_joltage)
+
+            press_tracker = new_press_tracker
+        total_presses += press_count
+    return total_presses
 
 
 def main():
