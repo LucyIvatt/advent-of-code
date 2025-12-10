@@ -17,27 +17,44 @@ def part_one(puzzle_input):
             [int(n) for n in c.strip("()").split(",") if n]
             for c in buttons.split()
         ]
-        lights
+
+        button_masks = []
+        for btn in buttons:
+            mask = 0
+            for idx in btn:
+                mask |= (1 << idx)
+            button_masks.append(mask)
+
+        lights_mask = 0
+        for i, ch in enumerate(lights):
+            if ch == "#":
+                lights_mask |= (1 << i)
 
         press_count = 0
-        press_tracker = [(x, list("." * len(lights))) for x in range(len(buttons))]
+        press_tracker = [(x, 0) for x in range(len(button_masks))]
         not_valid = True
+
+        visited = {f"{x}-{y}" for x, y in press_tracker}
 
         while not_valid:
             press_count += 1
             new_press_tracker = []
+
             for next_button, current_lights in press_tracker:
-                for toggle in buttons[next_button]:
-                    current_lights[toggle] = "." if current_lights[toggle] == "#" else "#"
-                if "".join(current_lights) == lights:
+                current_lights ^= button_masks[next_button]
+
+                if current_lights == lights_mask:
                     not_valid = False
                     break
                 else:
-                    new_press_tracker += [(x, current_lights) for x in range(len(buttons))]
+                    for x in range(len(button_masks)):
+                        state = f"{x}-{current_lights}"
+                        if state not in visited:
+                            visited.add(state)
+                            new_press_tracker.append((x, current_lights))
 
             press_tracker = new_press_tracker
         total_presses += press_count
-        print(press_count)
     return total_presses
 
 
@@ -46,7 +63,7 @@ def part_two(puzzle_input):
 
 
 def main():
-    puzzle_input = input_data("python/year_2025/day_10_factory/example.txt")
+    puzzle_input = input_data("python/year_2025/day_10_factory/input.txt")
 
     p1, p1_time = time_function(part_one, puzzle_input)
     p2, p2_time = time_function(part_two, puzzle_input)
