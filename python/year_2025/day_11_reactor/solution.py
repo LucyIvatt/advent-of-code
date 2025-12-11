@@ -1,6 +1,23 @@
 from collections import defaultdict
-import time
+import math
 from python.helpers.misc import input_data, time_function
+
+CACHE = {}
+
+
+def count_paths(start_node, end_node, graph):
+    if start_node == end_node:
+        return 1
+    if (start_node, end_node) in CACHE:
+        return CACHE[(start_node, end_node)]
+
+    total = 0
+    for next_node in graph[start_node]:
+        total += count_paths(next_node, end_node, graph)
+
+    CACHE[(start_node, end_node)] = total
+
+    return total
 
 
 def part_one(puzzle_input):
@@ -43,30 +60,16 @@ def part_two(puzzle_input):
             graph[node].add(connection)
 
     # Path(Start->Node1) * Path(Node1->Node2) * Path(Node2->End))
-    perms = (("svr", "dac"), ("svr", "fft"), ("dac", "fft"), ("fft", "dac"), ("fft", "out"), ("dac", "out"))
-    counts = []
+    # need to convert to DFS and use memo i think
+    perms = [[("svr", "dac"), ("dac", "fft"), ("fft", "out")], [("svr", "fft"), ("fft", "dac"), ("dac", "out")]]
+    total = 0
 
-    for start_node, end_node in perms:
-        num_paths = 0
-        possibilities = [start_node]
-
-        while possibilities:
-            new_possibilities = []
-            for node in possibilities:
-                if node == end_node:
-                    num_paths += 1
-
-                else:
-                    new_paths = []
-                    for next_node in graph[node]:
-                        new_paths.append(next_node)
-                    new_possibilities.extend(new_paths)
-            possibilities = new_possibilities
-        counts.append(num_paths)
-
-    for i in range(len(perms)):
-        print(perms[i], counts[i])
-    return
+    for perm in perms:
+        counts = []
+        for start_node, end_node in perm:
+            counts.append(count_paths(start_node, end_node, graph))
+        total += math.prod(counts)
+    return total
 
 
 def main():
