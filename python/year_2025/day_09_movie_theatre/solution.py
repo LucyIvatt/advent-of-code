@@ -26,42 +26,38 @@ def part_one(puzzle_input):
 
 def part_two(puzzle_input):
     coords = [tuple(map(int, line.split(","))) for line in puzzle_input]
+    # sorted_distances = list of tuples: ( (point1, point2), area )
     sorted_distances = get_distanced_rectangles(puzzle_input)[1]
 
-    edge_pairs = set()
-    for edge in range(len(coords)):
-        c1 = coords[edge]
-        c2 = coords[edge+1 if edge+1 < len(coords) else 0]
-        edge_pairs.add((c1, c2))
+    # Build polygon edges as flat tuples (x1, y1, x2, y2)
+    edges = []
+    for i in range(len(coords)):
+        x1, y1 = coords[i]
+        x2, y2 = coords[(i + 1) % len(coords)]
+        edges.append((x1, y1, x2, y2))
 
     for rect, area in sorted_distances:
-        rx1, ry1 = rect[0]
-        rx2, ry2 = rect[1]
+        (rx1, ry1), (rx2, ry2) = rect
 
-        rect_min_x = min(rx1, rx2)
-        rect_max_x = max(rx1, rx2)
-        rect_min_y = min(ry1, ry2)
-        rect_max_y = max(ry1, ry2)
+        rMinX = min(rx1, rx2)
+        rMaxX = max(rx1, rx2)
+        rMinY = min(ry1, ry2)
+        rMaxY = max(ry1, ry2)
 
         valid = True
-        for edge in edge_pairs:
-            ex1, ey1 = edge[0]
-            ex2, ey2 = edge[1]
+        for ex1, ey1, ex2, ey2 in edges:
+            eMinX = min(ex1, ex2)
+            eMaxX = max(ex1, ex2)
+            eMinY = min(ey1, ey2)
+            eMaxY = max(ey1, ey2)
 
-            edge_min_x = min(ex1, ex2)
-            edge_max_x = max(ex1, ex2)
-            edge_min_y = min(ey1, ey2)
-            edge_max_y = max(ey1, ey2)
-
-            # rect_min_x < edge_max_x and
-            # rect_max_x > edge_min_x and
-            # rect_min_y < edge_max_y and
-            # rect_max_y > edge_min_y
-
-            if (rect_min_x < edge_max_x and rect_max_x > edge_min_x and rect_min_y < edge_max_y and rect_max_y > edge_min_y):
+            # Bounding-box overlap (strict), touching is OK
+            if rMinX < eMaxX and rMaxX > eMinX and rMinY < eMaxY and rMaxY > eMinY:
                 valid = False
                 break
+
         if valid:
+            # This is the first valid rectangle in sorted order → largest area
             return area
 
 
