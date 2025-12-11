@@ -23,7 +23,6 @@ def part_one(puzzle_input):
             prev_node = possibility[-1]
             if prev_node == end_node:
                 num_paths += 1
-                print(possibility)
 
             else:
                 new_paths = []
@@ -36,7 +35,38 @@ def part_one(puzzle_input):
 
 
 def part_two(puzzle_input):
-    pass
+    graph = defaultdict(set)
+
+    for line in puzzle_input:
+        node, connections = line.split(":")
+        for connection in connections.strip().split(" "):
+            graph[node].add(connection)
+
+    # Path(Start->Node1) * Path(Node1->Node2) * Path(Node2->End))
+    perms = (("svr", "dac"), ("svr", "fft"), ("dac", "fft"), ("fft", "dac"), ("fft", "out"), ("dac", "out"))
+    counts = []
+
+    for start_node, end_node in perms:
+        num_paths = 0
+        possibilities = [start_node]
+
+        while possibilities:
+            new_possibilities = []
+            for node in possibilities:
+                if node == end_node:
+                    num_paths += 1
+
+                else:
+                    new_paths = []
+                    for next_node in graph[node]:
+                        new_paths.append(next_node)
+                    new_possibilities.extend(new_paths)
+            possibilities = new_possibilities
+        counts.append(num_paths)
+
+    for i in range(len(perms)):
+        print(perms[i], counts[i])
+    return
 
 
 def main():
