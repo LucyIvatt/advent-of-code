@@ -1,9 +1,8 @@
-import ast
-from collections import defaultdict
 import re
-import time
-from python.helpers.misc import input_data, time_function  # f
-from ast import literal_eval
+import string
+from python.helpers.misc import input_data, time_function
+from z3 import *
+
 
 pattern = r'^\[([^\]]+)\]\s*((?:\([^)]*\)\s*)+)\s*(\{[^}]+\})$'
 
@@ -64,41 +63,25 @@ def part_two(puzzle_input):
 
         _, buttons, joltage = m.groups()
 
-        joltage_target = tuple(int(x) for x in joltage.strip("{}").split(","))
-
-        print(joltage)
-
+        joltage = [int(n) for n in joltage.strip("{}").split(",")]
         buttons = [[int(n) for n in c.strip("()").split(",") if n] for c in buttons.split()]
 
-        press_count = 0
-        not_valid = True
-        visited = {}
-        first = (tuple(0 for _ in joltage_target))
-        press_tracker = [first]
-        visited = {first}
+        button_vars = {b_i: Int(string.ascii_lowercase[b_i]) for b_i in range(len(buttons))}
 
-        while not_valid:
-            press_count += 1
-            new_press_tracker = []
+        o = Optimize()
 
-            for current_joltage in press_tracker:
-                for button in buttons:
-                    new_joltage = list(current_joltage)
+        for var in button_vars.values():
+            o.add(var >= 0)
 
-                    for i in button:
-                        new_joltage[i] += 1
-                    new_joltage = tuple(new_joltage)
+        for i in range(len(joltage)):
+            o.add(sum(button_vars[j] for j in range(len(button_vars)) if i in buttons[j]) == joltage[i])
 
-                    if joltage_target == new_joltage:
-                        not_valid = False
-                        break
-                    else:
-                        if not any([a > b for a, b in zip(new_joltage, joltage_target)]) and new_joltage not in visited:
-                            visited.add(new_joltage)
-                            new_press_tracker.append(new_joltage)
+        o.minimize(sum(button_vars.values()))
+        o.check()
+        model = o.model()
 
-            press_tracker = new_press_tracker
-        total_presses += press_count
+        total = sum(model[v].as_long() for v in button_vars.values())
+        total_presses += total
     return total_presses
 
 
