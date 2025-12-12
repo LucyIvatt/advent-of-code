@@ -1,0 +1,21 @@
+import unittest
+
+from python.year_2025.day_12_christmas_tree_farm.solution import input_data, part_one, part_two
+
+
+class TestDay12(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.puzzle_input = input_data("python/year_2025/day_12_christmas_tree_farm/input.txt")
+
+    def test_p1_actual(self):
+        """
+        Tests the Day 12 Part 1 using my generated input. Used to check any edits
+        made to the program have not broken it.
+        """
+        self.assertEqual(part_one(self.__class__.puzzle_input), 579)
+        pass
+
+
+if __name__ == '__main__':
+    unittest.main()
