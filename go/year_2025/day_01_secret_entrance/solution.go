@@ -7,48 +7,43 @@ import (
 	"github.com/LucyIvatt/advent-of-code/go/helpers"
 )
 
+const dialSize = 100
+
 func rotateDial(currentPosition int, instruction string) int {
-	var nextPos int;
-	direction := string(instruction[0])
 	turnAmount, err := strconv.Atoi(instruction[1:])
 	if err != nil {
-			panic(err)
+		panic(err)
 	}
 
-	if direction == "L"{
-	newPos := (currentPosition - turnAmount)%100
+	switch instruction[0] {
+	case 'L':
+		turnAmount = -turnAmount
 
-	if newPos < 0 {
-		nextPos = 100 + newPos
-	} else {
-		nextPos = newPos
-	}
-	
-	} else {
-		newPos := (currentPosition + turnAmount)
-		nextPos = newPos%100;
+	case 'R':
+	default:
+		panic("invalid direction: " + string(instruction[0]))
 	}
 
-	return nextPos
+	return ((currentPosition+turnAmount)%dialSize + dialSize) % dialSize
 }
 
-func p1() {
+func solveP1() int {
 	input := helpers.InputLines("input.txt")
 
-	currentPos := 50
+	currentPosition := 50
 	password := 0
 
-	for _, element := range input {
-		currentPos = rotateDial(currentPos, element)
+	for _, instruction := range input {
+		currentPosition = rotateDial(currentPosition, instruction)
 
-		if (currentPos == 0) {password++}
-
-		fmt.Println("current pos", currentPos)
+		if currentPosition == 0 {
+			password++
+		}
 	}
-	fmt.Println("password", password)
+
+	return password
 }
 
-
 func main() {
-	p1()
+	fmt.Println("password:", solveP1())
 }
