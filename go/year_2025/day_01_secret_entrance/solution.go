@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/LucyIvatt/advent-of-code/go/helpers"
@@ -27,9 +26,8 @@ func rotateDial(currentPosition int, instruction string) int {
 	return ((currentPosition+turnAmount)%dialSize + dialSize) % dialSize
 }
 
-func solveP1() int {
-	input := helpers.InputLines("input.txt")
-
+func partOne(file helpers.InputFile) int {
+	input := helpers.InputLines(file.Filename())
 	currentPosition := 50
 	password := 0
 
@@ -44,6 +42,14 @@ func solveP1() int {
 	return password
 }
 
+func partTwo(file helpers.InputFile) int {
+	return 0
+}
+
 func main() {
-	fmt.Println("password:", solveP1())
+	helpers.RunDay(
+		"Day 01: secret_entrance",
+		partOne,
+		partTwo,
+	)
 }
