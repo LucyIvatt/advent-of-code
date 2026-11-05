@@ -40,7 +40,7 @@ Python: 🐍 Typescript: ⌨️
 | Day 23 |           |           |           |           |    ➖       |
 | Day 24 |           |           |           |           |    ➖       |
 | Day 25 |           |           |           |           |     ➖      |
-| Total  |    34/50     |    30/50     |    28/50     |    38/50     |     21/22      |
+| Total  |    34/50     |    30/50     |    28/50     |    38/50     |     22/24      |
 | %  |    68%     |    60%     |    56%     |    76%    |          |
 
 _\*with the amount of help I needed from reddit & friends, I don't think p2 for this one reaaaally counts_ 😂
